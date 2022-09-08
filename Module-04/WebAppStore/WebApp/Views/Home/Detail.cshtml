@@ -1,0 +1,54 @@
+﻿@model Product
+
+<div class="row">
+    <div class="col-3">
+        <ul>
+            @foreach (Category item in ViewBag.categories)
+            {
+                <li><a href="/home/category/@item.CategoryId">@item.CategoryName</a></li>
+            }
+        </ul>
+    </div>
+    <div class="col-9">
+        <h3>@Model.ProductName</h3>
+        @foreach (string img in Model.ImageUrl.Split(','))
+        {
+            <img class="img-fluid" src="/photos/@img" alt="@Model.ProductName" />
+        }
+        <p>Price: <b>@Model.UnitOfPrice.ToString("#,###")</b></p>
+
+        @* Button Add To Cart *@
+        <form action="/cart/add" method="post">
+            <input type="hidden" name="productId" value="@Model.ProductId" />
+            <input type="number" name="quantity" value="1" min="1" max="100" />
+            <button class="btn btn-primary">Add To Cart</button>
+        </form>
+
+        @if (Model.Description != null)
+        {
+            <p>@Html.Raw(Model.Description)</p>
+        }
+        @if (Model.Specification != null)
+        {
+            <p><b>Thông số kỹ thuật</b></p>
+            <p>@Html.Raw(Model.Specification.Replace("\n", "<br>"))</p>
+        }
+
+        <div>Product Relation</div>
+        <div class="row">
+            @foreach (Product item in ViewBag.relations)
+            {
+                <div class="col-3">
+                    <a href="/home/detail/@item.ProductId"><h3>@item.ProductName</h3></a>
+                    <a href="/home/detail/@item.ProductId">
+                        <img class="img-fluid" src="/photos/@item.ImageUrl.Split(',')[0]" alt="@item.ProductName" />
+                    </a>
+                    <p>Price: <b>@item.UnitOfPrice.ToString("#,###")</b></p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+
